@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
+	
+	<!-- 这个文件用于创建Service -->
+	
+	<!-- 创建Service -->
+	<bean id="userService" class="gz.itheima.itheimacrm.service.impl.UserServiceImpl">
+		<!-- 注入dao -->
+		<property name="userDao" ref="userDao"></property>
+	</bean>
+	
+	<!-- 客户模块 -->
+	<bean id="customerService" class="gz.itheima.itheimacrm.service.impl.CustomerServiceImpl">
+		<!-- 注入dao -->
+		<property name="customerDao" ref="customerDao"></property>
+	</bean>
+	
+	<!-- 联系人模块 -->
+	<bean id="linkmanService" class="gz.itheima.itheimacrm.service.impl.LinkmanServiceImpl">
+		<!-- 注入dao -->
+		<property name="linkmanDao" ref="linkmanDao"></property>
+	</bean>
+	
+	
+</beans>
+
+
+
+
+
+
+
+
+
+
+
+

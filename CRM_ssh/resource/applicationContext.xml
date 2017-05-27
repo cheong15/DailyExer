@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
+	
+	
+	<!-- 引入分离的spring的配置文件 -->
+	<!-- 1）第一种引入方式：一个一个文件引入 -->
+	<!-- <import resource="applicationContext-action.xml"/>
+	<import resource="applicationContext-service.xml"/>
+	<import resource="applicationContext-dao.xml"/> -->
+	
+	<!-- 2）第二种方式引入：通配引入 -->
+	<import resource="applicationContext-*.xml"/>
+	
+	
+	
+	<!-- 1、数据源 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="jdbcUrl" value="jdbc:mysql:///crm?useUnicode=true&amp;characterEncoding=utf-8"></property>
+		<property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+		<property name="user" value="root"></property>
+		<property name="password" value="passw0rd"></property>
+	</bean>
+	
+	<!-- 2、创建SessionFactory -->
+	<bean id="sessionFactory2" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<!-- 注入数据源 -->
+		<property name="dataSource" ref="dataSource"></property>
+		<!-- 配置扩展参数 -->
+		<property name="hibernateProperties">
+			<props>
+				<!-- 配置方言 -->
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+				<!-- 显示sql -->
+				<prop key="hibernate.show_sql">true</prop>
+				<!-- 格式化sql -->
+				<prop key="hibernate.format_sql">true</prop>
+				<!-- 维护表关系 -->
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+			</props>
+		</property>
+		
+		<!-- 映射文件 -->
+		<property name="mappingResources">
+			<list>
+				<value>gz/itheima/itheimacrm/entity/User.hbm.xml</value>
+				<value>gz/itheima/itheimacrm/entity/Customer.hbm.xml</value>
+				<!-- 一定要引入隐射文件 -->
+				<value>gz/itheima/itheimacrm/entity/Linkman.hbm.xml</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 3、创建hibernate的模板 -->
+	<bean id="hibernateTemplate" class="org.springframework.orm.hibernate5.HibernateTemplate">
+		<!-- 注入SessionFactory -->
+		<property name="sessionFactory" ref="sessionFactory2"></property>
+	</bean>
+	
+	
+	
+	<!-- 配置AOP事务 -->
+	<!-- 1、事务管理器 -->
+	<bean id="hibernateTransactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		<!-- 注入SessionFactory -->
+		<property name="sessionFactory" ref="sessionFactory2"></property>
+	</bean>
+	
+	<!-- 2、事务通知 -->
+	<tx:advice id="myTxAdvice" transaction-manager="hibernateTransactionManager">
+		<tx:attributes>
+			<tx:method name="save*"  isolation="DEFAULT" propagation="REQUIRED"/>
+			<tx:method name="update*"  isolation="DEFAULT" propagation="REQUIRED"/>
+			<tx:method name="delete*"  isolation="DEFAULT" propagation="REQUIRED"/>
+			<tx:method name="find*"  isolation="DEFAULT" propagation="SUPPORTS" read-only="true"/>
+			
+		</tx:attributes>
+	</tx:advice>
+	
+	<!-- 3、配置切面 -->
+	<aop:config>
+		<aop:advisor advice-ref="myTxAdvice" pointcut="execution(* gz.itheima.itheimacrm.service.impl.*Impl.*(..))"/>
+	</aop:config>
+	
+	
+</beans>
+
+
+
+
+
+
+
+
+
+
+
+

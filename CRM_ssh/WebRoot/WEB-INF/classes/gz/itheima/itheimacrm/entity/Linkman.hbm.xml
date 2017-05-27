@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<!-- 联系人的隐射文件 
+多方：
+多对一的关系
+-->
+<hibernate-mapping>
+
+	<class name="gz.itheima.itheimacrm.entity.Linkman" table="cst_linkman">
+		<!-- 主键属性 -->
+		<id name="lkm_id" column="lkm_id">
+			<!-- 自增长策略 -->
+			<generator class="native"></generator>
+		</id>
+		<!-- 普通属性 -->
+		<property name="lkm_name" column="lkm_name"></property>
+		
+		<!-- 等下来处理这个关系隐射 -->
+		<!-- <property name="lkm_cust_id" column="lkm_cust_id"></property> -->
+		<!-- 配置 多对一 
+			延迟加载： 
+				lazy="false"  : 去除延迟加载
+		-->
+		<many-to-one name="customer" 
+			class="gz.itheima.itheimacrm.entity.Customer" 
+			column="lkm_cust_id"></many-to-one>
+		
+		
+		<property name="lkm_gender" column="lkm_gender"></property>
+		<property name="lkm_phone" column="lkm_phone"></property>
+		<property name="lkm_mobile" column="lkm_mobile"></property>
+		<property name="lkm_email" column="lkm_email"></property>
+		<property name="lkm_qq" column="lkm_qq"></property>
+		<property name="lkm_position" column="lkm_position"></property>
+		<property name="lkm_memo" column="lkm_memo"></property>
+	</class>
+	
+</hibernate-mapping>

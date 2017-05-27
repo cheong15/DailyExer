@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+
+<struts>
+	<!-- 不拦截静态的样式文件 -->
+	<constant name="struts.action.excludePattern" value="/static/.*" />
+	
+	<!-- 去掉struts2标签的样式 -->
+	<constant name="struts.ui.theme" value="simple"></constant>
+	
+	<!-- action配置 -->
+	<package name="crm" namespace="/" extends="struts-default">
+	
+		<!-- 全局视图的消息提醒 -->
+		<global-results>
+			<result>/views/msg.jsp</result>
+		</global-results>
+	
+		<!-- 用户模块 -->
+		<action name="user_*" class="userAction" method="{1}">
+			
+			<!-- 用户列表视图 -->
+			<result name="list">/views/user/list.jsp</result>
+			
+			<!-- 配置登录的视图 -->
+			<result name="login">/login.jsp</result>
+			
+			<!-- 跳转到主页 -->
+			<result name="main" type="redirectAction">user_index</result>
+			
+			<!-- 主页 -->
+			<result name="index">/views/main.jsp</result>
+		</action>
+		
+		
+		<!-- 客户模块 -->
+		<action name="customer_*" class="customerAction" method="{1}">
+			<result name="input">/views/customer/add.jsp</result>
+			<result name="list">/views/customer/list.jsp</result>
+		</action>
+		
+		
+		<!-- 联系人的模块 -->
+		<action name="linkman_*" class="linkmanAction" method="{1}">
+			<result name="toadd">/views/linkman/add.jsp</result>
+			<result name="list">/views/linkman/list.jsp</result>
+		</action>
+		
+		
+	</package>
+</struts>
